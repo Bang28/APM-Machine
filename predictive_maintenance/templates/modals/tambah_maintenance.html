@@ -1,0 +1,229 @@
+{% load static %}
+
+{% comment %} Modal tambah data maintenance {% endcomment %}
+<div class="modal fade" id="tambahdatamaintenance" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Tambah Data Maintenance</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <!-- FORM -->
+            <form action="{% url "add_data_maintenance" %}" method="POST">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h5>Prevective Maintenance</h5>
+                            <div class="card border border-dark mb-3">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputload_current_r">Motor <b class="text-danger">*</b></label>
+                                                <select name="motor" id="motor" class="form-control select2" required>
+                                                    <option value="" disabled selected>Cari dan Pilih</option>
+                                                    {% for m in motors %}
+                                                        <option value="{{m.id}}">{{m.tag_number}} - {{m.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputperiodik">Periodik <b class="text-danger">*</b></label>
+                                                <select name="periodik" id="inputperiodik" class="form-control" required>
+                                                    <option value="" selected disabled>Pilih Periodik</option>
+                                                    <option disabled></option>
+                                                    <option value="Harian">Harian</option>
+                                                    <option value="Mingguan">Mingguan</option>
+                                                    <option value="Bulanan">Bulanan</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputpelaksana">Pelaksana <b class="text-danger">*</b></label>
+                                                <input type="text" name="pelaksana" class="form-control" id="inputpelaksana" value="{{user.first_name}} {{user.last_name}}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h5>Load Current (IB)</h5>
+                            <div class="card border border-dark mb-3">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputload_current_r">Load Current R </label>
+                                                <input type="number" step="any" name="load_current_r" class="form-control" id="inputload_current_r" placeholder="Ampere(A)" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputload_current_s">Load Current S </label>
+                                                <input type="number" step="any" name="load_current_s" class="form-control" id="inputload_current_s" placeholder="Ampere(A)" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputload_current_t">Load Current T </label>
+                                                <input type="number" step="any" name="load_current_t" class="form-control" id="inputload_current_t" placeholder="Ampere(A)" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5>Bearing & Coil Temp (Max 80°)</h5>
+                            <div class="card border border-dark mb-3">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputbearing_temp_de">Bearing D.E </label>
+                                                <input type="number" step="any" name="bearing_temp_de" class="form-control" id="inputbearing_temp_de" placeholder="Max 80°" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputbearing_temp_nde">Bearing N.D.E </label>
+                                                <input type="number" step="any" name="bearing_temp_nde" class="form-control" id="inputbearing_temp_nde" placeholder="Max 80°" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputcoil_temp">Load Current T </label>
+                                                <input type="number" step="any" name="coil_temp" class="form-control" id="inputcoil_temp" placeholder="Max 80°" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h5>Vibration Motor</h5>
+                            <div class="card border border-dark mb-3">
+                                <div class="card-body">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="rigid_or_flexible" id="inlinerigid" value="Rigid">
+                                        <label class="form-check-label" for="inlinerigid">RIGID</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="rigid_or_flexible" id="inlineflexible" value="Flexible">
+                                        <label class="form-check-label" for="inlineflexible">FLEXIBLE</label>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputrigitde">Rigid D.E </label>
+                                                <input type="number" step="any" name="vib_rigid_de" class="form-control" id="inputrigitde" placeholder="Ampere(A)" required disabled>
+                                                <small class="text-info">Max 4.5 mm/s</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputrigitnde">Rigid N.D.E </label>
+                                                <input type="number" step="any" name="vib_rigid_nde" class="form-control" id="inputrigitnde" placeholder="Ampere(A)" required disabled>
+                                                <small class="text-info">Max 4.5 mm/s</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputflexiblede">Flexible D.E </label>
+                                                <input type="number" step="any" name="vib_flexible_de" class="form-control" id="inputflexiblede" placeholder="Ampere(A)" required disabled>
+                                                <small class="text-info">Max 7.1 mm/s</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputflexiblende">Flexible N.D.E </label>
+                                                <input type="number" step="any" name="vib_flexible_nde" class="form-control" id="inputflexiblende" placeholder="Ampere(A)" required disabled>
+                                                <small class="text-info">Max 7.1 mm/s</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5>Vibrasion Bearing</h5>
+                            <div class="card border border-dark mb-3">
+                                <div class="card-body">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="class_type" id="inlineclass2" value="Class 2">
+                                        <label class="form-check-label" for="inlineclass2">Class 2</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="class_type" id="inlineclass3" value="Class 3">
+                                        <label class="form-check-label" for="inlineclass3">Class 3</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputvib_class_2_de">Class 2 D.E </label>
+                                                <input type="number" step="any" name="vib_class_2_de" class="form-control" id="inputvib_class_2_de" placeholder="Max 80°" required>
+                                                <small class="text-info">Max 4gE</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputvib_class_2_nde">Class 2 N.D.E </label>
+                                                <input type="number" step="any" name="vib_class_2_nde" class="form-control" id="inputvib_class_2_nde" placeholder="Max 80°" required>
+                                                <small class="text-info">Max 4gE</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputvib_class_3_de">Class 3 D.E </label>
+                                                <input type="number" step="any" name="vib_class_3_de" class="form-control" id="inputvib_class_3_de" placeholder="Max 80°" required>
+                                                <small class="text-info">Max 10gE</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputvib_class_3_nde">Class 3 N.D.E </label>
+                                                <input type="number" step="any" name="vib_class_3_nde" class="form-control" id="inputvib_class_3_nde" placeholder="Max 80°" required>
+                                                <small class="text-info">Max 10gE</small>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="inputketerangan">Keterangan [Opsional]</label>
+                                <textarea class="form-control" name="keterangan" id="inputketerangan" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+            <!-- /FORM -->
+        </div>
+    </div>
+</div>

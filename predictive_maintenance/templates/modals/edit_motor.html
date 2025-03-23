@@ -1,0 +1,126 @@
+{% comment %} Modal Edit data motor {% endcomment %}
+<div class="modal fade" id="editdatamotor{{m.id}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title">Edit Data Motor</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <!-- FORM -->
+        <form action="{% url 'edit_data_motor' m.id %}" method="POST">
+            {% csrf_token %}
+            
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputtagno">Tag No <b class="text-danger">*</b></label>
+                            <input type="text" name="tag_number" class="form-control" id="inputtagno" placeholder="Tag no" value="{{m.tag_number}}" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label for="inputmotorname">Motor Name <b class="text-danger">*</b></label>
+                            <input type="text" name="name" class="form-control" id="inputmotorname" placeholder="Motor name" value="{{m.name}}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <h5>Specification</h5>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputoutput">Output (KW) <b class="text-danger">*</b></label>
+                            <input type="number" step="any" name="output" class="form-control" id="inputoutput" placeholder="Output (KW)" value="{{m.output}}" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputvolt">Voltage (V) <b class="text-danger">*</b></label>
+                            <input type="number" step="any" name="voltage" class="form-control" id="inputvolt" placeholder="Voltage (V)" value="{{m.voltage}}" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputspeed">Speed (RPM) <b class="text-danger">*</b></label>
+                            <input type="number" step="any" name="speed" class="form-control" id="inputspeed" placeholder="Speed (RPM)" value="{{m.speed}}" required>
+                        </div>
+                    </div>
+                </div>
+
+                <h5>Current</h5>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="inputtype">Type <b class="text-danger">*</b></label>
+                            <input type="text" name="starter_type" class="form-control" id="inputtype" placeholder="Type" value="{{m.starter_type}}" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="inputsetol">Set/Ol <b class="text-danger">*</b></label>
+                            <input type="number" step="any" name="set_ol" class="form-control" id="inputsetol" placeholder="Set/Ol" value="{{m.set_ol}}" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="inputinput">Input (A) <b class="text-danger">*</b></label>
+                            <input type="number" step="any" name="input" class="form-control" id="inputinput" placeholder="Input (A)" value="{{m.input}}" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="inputfrekuensi">Frek (Hz)</label>
+                            <input type="number" step="any" name="frek" class="form-control" id="inputfrekuensi" placeholder="Frekuensi (Hz)" value="{{m.frek}}">
+                            <small class="text-info">Boleh kosong</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputframe">Frame</label>
+                            <input type="text" name="frame" class="form-control" id="inputframe" placeholder="Frame" value="{{m.frame}}">
+                            <small class="text-info">Boleh kosong</small>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="inputfoundationtype">Foundation Type <b class="text-danger">*</b></label>
+                                <select name="foundation_type" id="inputfoundationtype" class="form-control" required>
+                                    <option value="{{m.foundation_type}}" selected >{{m.foundation_type}}</option>
+                                    <option disabled></option>
+                                    <option value="Rigid">RIGID</option>
+                                    <option value="Flexible">FLEXIBLE</option>
+                                </select>
+                            </div>
+                        </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputclasstype">Class Type <b class="text-danger">*</b></label>
+                            <select name="class_type" id="inputclasstype" class="form-control" required>
+                                <option value="{{m.class_type}}" selected>{{m.class_type}}</option>
+                                <option disabled></option>
+                                <option value="Class 2">Class 2 (<= 1800 RPM)</option>
+                                <option value="Class 3">Class 3 (> 1800 RPM)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-warning">Save Changes</button>
+            </div>
+        </form>
+        <!-- /FORM -->
+    </div>
+    <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

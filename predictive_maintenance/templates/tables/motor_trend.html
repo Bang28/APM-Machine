@@ -1,0 +1,814 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMP | Motor Trend</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css'>
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{% static 'plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
+    <style>
+        .custom-table th {
+            width: 100px;
+        }
+
+        @media print {
+            /* Sembunyikan elemen tertentu saat print */
+            .btn, .navbar, .sidebar {
+                display: none !important;
+            }
+
+            .page-break {
+                page-break-before: always; /* Mulai di halaman baru */
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+
+            thead, thead tr, thead th {
+                background-color: #28a745 !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        {% include 'snippets/navbar.html' %}
+
+        <!-- Main Sidebar Container -->
+        {% include 'snippets/sidebar.html' %}
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Motor Trend</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Motor trend</li>
+                    </ol>
+                </div>
+                </div>
+            </div><!-- /.container-fluid -->
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex align-items-center">
+                                <h4 class="mb-0 mr-auto">Trend Maintenance Motor - {{ motor.name }} ({{ motor.tag_number }})</h4>
+                                <button onclick="window.print()" class="btn btn-secondary">Print</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="table-responsive-sm">
+                                            <table class="table table-sm table-bordered table-striped text-center">
+                                                <tr>
+                                                    <td class="align-middle" rowspan="4">Motor Name</td>
+                                                    <td class="align-middle bg-success" rowspan="4">{{motor.name|default:'-'}}</td>
+                                                    <td class="align-middle" rowspan="8">Spesification Motor</td>
+                                                    <td>KW</td>
+                                                    <td>{{ motor.output|default:'-' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Starter Type</td>
+                                                    <td>{{ motor.starter_type|default:'-' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Speed (RPM)</td>
+                                                    <td>{{ motor.speed|default:'-' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>In (A)</td>
+                                                    <td>{{motor.input|default:'-'}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="align-middle" rowspan="3">Tag NO</td>
+                                                    <td class="align-middle bg-success" rowspan="3">{{motor.tag_number|default:'-'}}</td>
+                                                    <td>Voltage </td>
+                                                    <td>{{ motor.voltage|default:'-' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Frame</td>
+                                                    <td>{{ motor.frame|default:'-' }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Class Type</td>
+                                                    <td>{{ motor.class_type|default:'-' }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive-sm">
+                                            <table class="table table-sm table-bordered table-striped text-center">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="bg-success" rowspan="4">No</th>
+                                                        <th class="bg-success" rowspan="2">Frek</th>
+                                                        <th class="bg-success" colspan="3">Load Current</th>
+                                                        <th class="bg-success" colspan="3">Bearing &amp; Coil Temp</th>
+                                                        <th class="bg-success" colspan="4">Vibrasi Motor (Foundation)</th>
+                                                        <th class="bg-success" colspan="2">Vibrasi Bearing (Class 2)</th>
+                                                        <th class="bg-success" colspan="2">Vibrasi Bearing (Class 3)</th>
+                                                        <th class="bg-success" rowspan="4">Tanggal</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="bg-success" colspan="3">(IB)</th>
+                                                        <th class="bg-success" colspan="3">(Max 80℃)</th>
+                                                        <th class="bg-success" colspan="2">(Max 4.5 mm/s)</th>
+                                                        <th class="bg-success" colspan="2">(Max 7.1 mm/s)</th>
+                                                        <th class="bg-success" colspan="2" rowspan="2">Speed 500-1800 RPM</th>
+                                                        <th class="bg-success" colspan="2" rowspan="2">Speed 1800-3600 RPM</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="bg-success" rowspan="2">Hz</th>
+                                                        <th class="bg-success">R</th>
+                                                        <th class="bg-success">S</th>
+                                                        <th class="bg-success">T</th>
+                                                        <th class="bg-success">D.E</th>
+                                                        <th class="bg-success">N.D.E</th>
+                                                        <th class="bg-success">Coil</th>
+                                                        <th class="bg-success" colspan="2">Rigid</th>
+                                                        <th class="bg-success" colspan="2">Flexible</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="bg-success">(A)</th>
+                                                        <th class="bg-success">(A)</th>
+                                                        <th class="bg-success">(A)</th>
+                                                        <th class="bg-success">℃</th>
+                                                        <th class="bg-success">℃</th>
+                                                        <th class="bg-success">℃</th>
+                                                        <th class="bg-success">DE</th>
+                                                        <th class="bg-success">NDE</th>
+                                                        <th class="bg-success">DE</th>
+                                                        <th class="bg-success">NDE</th>
+                                                        <th class="bg-success">DE</th>
+                                                        <th class="bg-success">NDE</th>
+                                                        <th class="bg-success">DE</th>
+                                                        <th class="bg-success">NDE</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for m, v, main in trend_data %}
+                                                    <tr>
+                                                        <td>{{forloop.counter}}</td>
+                                                        <td></td>
+                                                        <td>{{m.load_current_r|default:"-"}}</td>
+                                                        <td>{{m.load_current_s|default:"-"}}</td>
+                                                        <td>{{m.load_current_t|default:"-"}}</td>
+                                                        <td>{{m.bearing_temp_de|default:"-"}}</td>
+                                                        <td>{{m.bearing_temp_nde|default:"-"}}</td>
+                                                        <td>{{m.coil_temp|default:"-"}}</td>
+                                                        <td>{{v.vib_rigid_de|default:"-"}}</td>
+                                                        <td>{{v.vib_rigid_nde|default:"-"}}</td>
+                                                        <td>{{v.vib_flexible_de|default:"-"}}</td>
+                                                        <td>{{v.vib_flexible_nde|default:"-"}}</td>
+                                                        <td>{{v.vib_class_2_de|default:"-"}}</td>
+                                                        <td>{{v.vib_class_2_nde|default:"-"}}</td>
+                                                        <td>{{v.vib_class_3_de|default:"-"}}</td>
+                                                        <td>{{v.vib_class_3_nde|default:"-"}}</td>
+                                                        <td>{{main.tanggal_maintenance|default:"-"|date:'d/m/Y'}}</td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <small>Note: Maksimal data yang ditampilkan adalah 7 data maintenance terakhir.</small>
+                                    </div>
+                                </div>
+                                
+                                <!--Grafik-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 style="text-align: center; font-weight: bold;">LOAD CURRENT</h4>
+                                        <div style="width: 100%; height: 400px; margin: auto;">
+                                            <canvas id="loadCurrentChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="table-responsive-sm">
+                                            <table class="table table-sm table-bordered table-striped text-center custom-table">
+                                                <tr>
+                                                    <th class="bg-primary">R</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{m.load_current_r|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-warning">S</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{m.load_current_s|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-secondary">T</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{m.load_current_t|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-dark">I.Nom</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{motor.input}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row page-break">
+                                    <div class="col-md-12">
+                                        <h4 style="text-align: center; font-weight: bold;">BEARING & COIL TEMP</h4>
+                                        <div style="width: 100%; height: 400px; margin: auto;">
+                                            <canvas id="bearingCoilChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="table-responsive-sm">
+                                            <table class="table table-sm table-bordered table-striped text-center custom-table">
+                                                <tr>
+                                                    <th class="bg-primary">D.E</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{m.bearing_temp_de|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-warning">N.D.E</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{m.bearing_temp_nde|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-secondary">COIL</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{m.coil_temp|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-dark">Temp Max</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>80</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 style="text-align: center; font-weight: bold;">VIBRATION FONDATION {{motor.foundation_type|upper}}</h4>
+                                        <div style="width: 100%; height: 400px; margin: auto;">
+                                            <canvas id="vibrationFoundationChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        {% if motor.foundation_type == "Rigid" %}
+                                        <div class="table-responsive-sm">
+                                            <table class="table table-sm table-bordered table-striped text-center custom-table">
+                                                <tr>
+                                                    <th class="bg-primary">D.E</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{v.vib_rigid_de|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-success">N.D.E</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{v.vib_rigid_nde|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-dark">Vib.Max.Found</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>4.5</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        {% else %}
+                                        <div class="table-responsive-sm">
+                                            <table class="table table-sm table-bordered table-striped text-center custom-table">
+                                                <tr>
+                                                    <th class="bg-danger">D.E</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{v.vib_flexible_de|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-purple">N.D.E</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{v.vib_flexible_nde|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-dark">Vib.Max.Found</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>7.1</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="row page-break">
+                                    <div class="col-md-12">
+                                        <h4 style="text-align: center; font-weight: bold;">VIBRATION BEARING CLASS {{motor.class_type|upper}}</h4>
+                                        <div style="width: 100%; height: 400px; margin: auto;">
+                                            <canvas id="vibrationBearingChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        {% if motor.class_type == "Class 2" %}
+                                        <div class="table-responsive-sm">
+                                            <table class="table table-sm table-bordered table-striped text-center custom-table">
+                                                <tr>
+                                                    <th class="bg-primary">D.E</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{v.vib_class_2_de|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-success">N.D.E</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{v.vib_class_2_nde|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-dark">Vib.Max.Found</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>4</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        {% else %}
+                                        <div class="table-responsive-sm">
+                                            <table class="table table-sm table-bordered table-striped text-center custom-table">
+                                                <tr>
+                                                    <th class="bg-danger">D.E</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{v.vib_class_3_de|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-purple">N.D.E</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>{{v.vib_class_3_nde|default:"-"}}</td>
+                                                    {% endfor %}
+                                                </tr>
+                                                <tr>
+                                                    <th class="bg-dark">Vib.Max.Found</th>
+                                                    {% for m, v, main in trend_data %}
+                                                    <td>10</td>
+                                                    {% endfor %}
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+
+                {% include 'modals/tambah_maintenance.html' %}
+
+            </section>
+            <!-- /.content -->
+        </div>
+        
+    </div>
+
+    {% comment %} jQuery {% endcomment %}
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    {% comment %} Bootstrap {% endcomment %}
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    {% comment %} ChartJS {% endcomment %}
+    <script src="{% static 'plugins/chartjs/Chart.js' %}"></script>
+    {% comment %} SweetAlert2 {% endcomment %}
+    <script src="{% static 'plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+    <!-- Toastr -->
+    <script src="{% static 'plugins/toastr/toastr.min.js' %}"></script>
+    {% comment %} AdminLTE {% endcomment %}
+    <script src="{% static 'dist/js/adminlte.js' %}"></script>
+    
+</body>
+</html>
+
+<!-- Alerts -->
+{% include 'alert/alerts.html' %}
+
+
+{% comment %} Chart Line Load Current {% endcomment %}
+<script>
+    // Ambil data dari Django
+    var loadCurrentData = JSON.parse('{{ load_current_data|escapejs }}');
+
+    // Ambil data untuk Chart.js
+    var labels = loadCurrentData.dates;  // Tanggal sebagai label X
+    var dataR = loadCurrentData.R;
+    var dataS = loadCurrentData.S;
+    var dataT = loadCurrentData.T;
+    var dataNominal = loadCurrentData.Nominal;  // Nilai mengikuti data master motor
+
+    // Buat Chart Line
+    var ctx = document.getElementById('loadCurrentChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'R',
+                    data: dataR,
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                    fill: false,
+                    pointStyle: 'rectRot',
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    tension: 0.3
+                },
+                {
+                    label: 'S',
+                    data: dataS,
+                    borderColor: 'orange',
+                    backgroundColor: 'rgba(255, 165, 0, 0.2)',
+                    fill: false,
+                    pointStyle: 'circle',
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    tension: 0.3
+                },
+                {
+                    label: 'T',
+                    data: dataT,
+                    borderColor: 'gray',
+                    backgroundColor: 'rgba(128, 128, 128, 0.2)',
+                    fill: false,
+                    pointStyle: 'triangle',
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                    tension: 0.3
+                },
+                {
+                    label: 'I. Nominal Max',
+                    data: dataNominal,
+                    borderColor: 'red',
+                    backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                    fill: false,
+                    borderDash: [5, 5],  // Garis putus-putus
+                    pointStyle: 'star',
+                    pointRadius: 6,
+                    pointHoverRadius: 9
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.raw} A`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tanggal',
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Nilai Load Motor (A)',
+                        font: {
+                            size: 14
+                        }
+                    },
+                    beginAtZero: true,
+                    suggestedMax:  Math.max(...loadCurrentData["Nominal"]) + 20, // Tambahkan margin atas
+                }
+            }
+        }
+    });
+</script>
+
+{% comment %} Chart Line Bearing & Coil Temp {% endcomment %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById("bearingCoilChart").getContext("2d");
+        var tempData = JSON.parse('{{ temp_data|safe }}');
+
+        var chart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: tempData.dates,
+                datasets: [
+                    {
+                        label: "D.E",
+                        data: tempData.DE,
+                        borderColor: "blue",
+                        backgroundColor: "transparent",
+                        pointStyle: "circle",
+                        pointRadius: 5,
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: "N.D.E",
+                        data: tempData.NDE,
+                        borderColor: "orange",
+                        backgroundColor: "transparent",
+                        pointStyle: "square",
+                        pointRadius: 5,
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: "Coil",
+                        data: tempData.Coil,
+                        borderColor: "gray",
+                        backgroundColor: "transparent",
+                        pointStyle: "triangle",
+                        pointRadius: 5,
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: "Temp.max",
+                        data: tempData.MaxTemp,
+                        borderColor: "red",
+                        borderDash: [10, 5],  // Garis putus-putus
+                        backgroundColor: "transparent",
+                        pointStyle: "star",
+                        pointRadius: 0,
+                        fill: false,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 90,
+                        title: {
+                            display: true,
+                            text: "Nilai Temperature Motor",
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: "Tanggal",
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: "top",
+                    },
+                }
+            }
+        });
+    });
+</script>
+
+{% comment %} Chart Line Vibration Foundation {% endcomment %}
+<script>
+    // Ambil data dari context Django (pastikan ini sudah ada di dalam template)
+    const vibFoundData = JSON.parse('{{ vib_found_data|escapejs }}');
+
+    // Pastikan ada data sebelum memproses grafik
+    if (vibFoundData.dates.length > 0) {
+        const ctx = document.getElementById('vibrationFoundationChart').getContext('2d');
+
+        const vibrationChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: vibFoundData.dates,  // Label tanggal
+                datasets: [
+                    {
+                        label: 'Rigid DE',
+                        data: vibFoundData["Rigid DE"],
+                        borderColor: 'blue',
+                        backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Rigid NDE',
+                        data: vibFoundData["Rigid NDE"],
+                        borderColor: 'green',
+                        backgroundColor: 'rgba(0, 255, 0, 0.2)',
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Flexible DE',
+                        data: vibFoundData["Flexible DE"],
+                        borderColor: 'red',
+                        backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Flexible NDE',
+                        data: vibFoundData["Flexible NDE"],
+                        borderColor: 'purple',
+                        backgroundColor: 'rgba(128, 0, 128, 0.2)',
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Max Vibration Limit',
+                        data: vibFoundData["Max Vibration"], // Garis batas maksimal
+                        borderColor: 'black',
+                        borderWidth: 2,
+                        borderDash: [10, 5],  // Garis putus-putus
+                        fill: false,
+                        tension: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: Math.max(...vibFoundData["Max Vibration"]) + 2, // Tambahkan margin atas
+                        title: {
+                            display: true,
+                            text: 'Vibration Level (mm/s)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tanggal'
+                        }
+                    }
+                }
+            }
+        });
+    } else {
+        console.warn("Tidak ada data vibration yang tersedia.");
+    }
+
+</script>
+
+{% comment %} Chart Line Vibration Bearing {% endcomment %}
+<script>
+    // Ambil data dari context Django (pastikan ini sudah ada di dalam template)
+    const vibClassData = JSON.parse('{{ vib_class_data|escapejs }}');
+
+    // Pastikan ada data sebelum memproses grafik
+    if (vibClassData.dates.length > 0) {
+        const ctx = document.getElementById('vibrationBearingChart').getContext('2d');
+
+        const vibrationChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: vibClassData.dates,  // Label tanggal
+                datasets: [
+                    {
+                        label: 'Class 2 DE',
+                        data: vibClassData["Class 2 DE"],
+                        borderColor: 'blue',
+                        backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Class 2 NDE',
+                        data: vibClassData["Class 2 NDE"],
+                        borderColor: 'green',
+                        backgroundColor: 'rgba(0, 255, 0, 0.2)',
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Class 3 DE',
+                        data: vibClassData["Class 3 DE"],
+                        borderColor: 'red',
+                        backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Class 3 NDE',
+                        data: vibClassData["Class 3 NDE"],
+                        borderColor: 'purple',
+                        backgroundColor: 'rgba(128, 0, 128, 0.2)',
+                        fill: false,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'Max Vibration Limit',
+                        data: vibClassData["Max Vibration"], // Garis batas maksimal
+                        borderColor: 'black',
+                        borderWidth: 2,
+                        borderDash: [10, 5],  // Garis putus-putus
+                        fill: false,
+                        tension: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: Math.max(...vibClassData["Max Vibration"]) + 2, // Tambahkan margin atas
+                        title: {
+                            display: true,
+                            text: 'Vibration Level (mm/s)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tanggal'
+                        }
+                    }
+                }
+            }
+        });
+    } else {
+        console.warn("Tidak ada data vibration yang tersedia.");
+    }
+
+</script>
+

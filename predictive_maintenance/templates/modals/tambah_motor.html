@@ -1,0 +1,124 @@
+{% comment %} Modal tambah data motor {% endcomment %}
+<div class="modal fade" id="tambahdatamotor" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Tambah Data Motor</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <!-- FORM -->
+            <form action="{% url 'add_data_motor' %}" method="POST">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="inputtagno">Tag No <b class="text-danger">*</b></label>
+                                <input type="text" name="tag_number" class="form-control" id="inputtagno" placeholder="Tag no" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label for="inputmotorname">Motor Name <b class="text-danger">*</b></label>
+                                <input type="text" name="name" class="form-control" id="inputmotorname" placeholder="Motor name" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5>Specification</h5>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="inputoutput">Output (KW) <b class="text-danger">*</b></label>
+                                <input type="number" step="any" name="output" class="form-control" id="inputoutput" placeholder="Output (KW)" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="inputvolt">Voltage (V) <b class="text-danger">*</b></label>
+                                <input type="number" step="any" name="voltage" class="form-control" id="inputvolt" placeholder="Voltage (V)" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="inputspeed">Speed (RPM) <b class="text-danger">*</b></label>
+                                <input type="number" step="any" name="speed" class="form-control" id="inputspeed" placeholder="Speed (RPM)" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h5>Current</h5>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="inputtype">Type <b class="text-danger">*</b></label>
+                                <input type="text" name="starter_type" class="form-control" id="inputtype" placeholder="Type" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="inputsetol">Set/Ol <b class="text-danger">*</b></label>
+                                <input type="number" step="any" name="set_ol" class="form-control" id="inputsetol" placeholder="Set/Ol" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="inputinput">Input (A) <b class="text-danger">*</b></label>
+                                <input type="number" step="any" name="input" class="form-control" id="inputinput" placeholder="Input (A)" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label for="inputfrekuensi">Frek (Hz)</label>
+                                <input type="number" step="any" name="frek" class="form-control" id="inputfrekuensi" placeholder="Frekuensi (Hz)">
+                                <small class="text-info">Boleh kosong</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="inputframe">Frame</label>
+                                <input type="text" name="frame" class="form-control" id="inputframe" placeholder="Frame">
+                                <small class="text-info">Boleh kosong</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="inputfoundationtype">Foundation Type <b class="text-danger">*</b></label>
+                                <select name="foundation_type" id="inputfoundationtype" class="form-control" required>
+                                    <option value="" selected disabled>Pilih</option>
+                                    <option disabled></option>
+                                    <option value="Rigid">RIGID</option>
+                                    <option value="Flexible">FLEXIBLE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="inputclasstype">Class Type <b class="text-danger">*</b></label>
+                                <select name="class_type" id="inputclasstype" class="form-control" required>
+                                    <option value="" selected disabled>Pilih</option>
+                                    <option disabled></option>
+                                    <option value="Class 2">Class 2 (<=1800 RPM)</option>
+                                    <option value="Class 3">Class 3 (>1800 RPM)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+            <!-- /FORM -->
+        </div>
+    </div>
+</div>

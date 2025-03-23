@@ -1,0 +1,19 @@
+{% comment %} Alerts {% endcomment %}
+<script>
+    document.addEventListener("DOMContentLoaded", 
+        function() {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+            });
+
+            {% for message in messages %}
+                Toast.fire({
+                    icon: '{{message.tags}}',
+                    title: '{{message}}'
+                })
+            {% endfor %}
+        })
+</script>

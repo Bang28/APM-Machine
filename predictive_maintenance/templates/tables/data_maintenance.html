@@ -1,0 +1,245 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMP | Data Maintenance</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css'>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{% static 'plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{% static 'plugins/select2/css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+</head>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        {% include 'snippets/navbar.html' %}
+
+        <!-- Main Sidebar Container -->
+        {% include 'snippets/sidebar.html' %}
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Data Maintenance</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Data Maintenance</li>
+                    </ol>
+                </div>
+                </div>
+            </div><!-- /.container-fluid -->
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambahdatamaintenance">
+                                Tambah Data Maintenance
+                                </button>
+                            </div>
+                        <div class="card-body">
+                            <table id="maintenance" class="table table-bordered table-striped text-center">
+                            <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kode Motor</th>
+                                <th>Periodik</th>
+                                <th>Tanggal Maintenance</th>
+                                <th>Keterangan</th>
+                                <th>Pelaksana</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for m in maintenances %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{m.motor.tag_number}}</td>
+                                    <td>{{m.periodik}}</td>
+                                    <td>{{m.tanggal_maintenance|date:'d F Y'}}</td>
+                                    <td>{{m.keterangan}}</td>
+                                    <td>{{m.pelaksana}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#detailmaintenance{{m.id}}"> Detail </button>
+                                        <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#editmaintenance{{m.id}}" >Edit</button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#hapusmaintenance{{m.id}}">Delete</button>
+                                    </td>
+                                </tr>
+                                {% include 'modals/detail_maintenance.html' %}
+                                {% include 'modals/edit_maintenance.html' %}
+                                {% include 'modals/hapus_maintenance.html' %}
+                                {% endfor %}
+                            </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.container-fluid -->
+
+                {% include 'modals/tambah_maintenance.html' %}
+
+            </section>
+            <!-- /.content -->
+        </div>
+        
+    </div>
+
+    {% comment %} jQuery {% endcomment %}
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    {% comment %} Bootstrap {% endcomment %}
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    {% comment %} DataTables  & Plugins {% endcomment %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+    <!-- Select2 -->
+    <script src="{% static 'plugins/select2/js/select2.full.min.js' %}"></script>
+    {% comment %} SweetAlert2 {% endcomment %}
+    <script src="{% static 'plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+    <!-- Toastr -->
+    <script src="{% static 'plugins/toastr/toastr.min.js' %}"></script>
+    {% comment %} AdminLTE {% endcomment %}
+    <script src="{% static 'dist/js/adminlte.js' %}"></script>
+    
+</body>
+</html>
+
+{% comment %} Datatables {% endcomment %}
+<script>
+    $(function () {        
+        $('#maintenance').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": false,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        });
+    });
+</script>
+
+{% comment %} Alerts {% endcomment %}
+{% include 'alert/alerts.html' %}
+
+<!--Search in colomn-->
+<script>
+    // Inisialisasi Select2 
+    $(document).ready(function(){
+        $('#motor').select2({
+            width: '100%',
+            dropdownParent: $('#tambahdatamaintenance')
+        })
+    })
+</script>
+
+{% comment %} Auto select type class {% endcomment %}
+<script>
+    $(document).on("change", "#motor", function () {
+        var motor_id = $(this).val();
+        //console.log("Motor ID Selected:", motor_id); // Debugging
+
+        $.ajax({
+            url: "/get-motor/" + motor_id + "/",
+            type: "GET",
+            beforeSend: function () {
+                //console.log("Sending AJAX request to:", "/get-motor/" + motor_id + "/");
+            },
+            success: function (data) {
+                //console.log("AJAX Response:", data); // Debugging
+
+                if (data.class_type) {
+                    // Reset semua radio button sebelum memilih salah satu
+                    $("input[name='class_type']").prop("checked", false).prop("disabled", false);
+
+                    setTimeout(function () {
+                        if (data.class_type === "Class 2") {
+                            $("#inlineclass2").prop("checked", true).prop("disabled", true).trigger("change");
+                            $("#inlineclass3").prop("disabled", true);
+                            setInputFields("class2");
+                        } else if (data.class_type === "Class 3") {
+                            $("#inlineclass3").prop("checked", true).prop("disabled", true).trigger("change");
+                            $("#inlineclass2").prop("disabled", true);
+                            setInputFields("class3");
+                        }
+                    }, 50);
+                }
+
+                // **NEW**: Auto select "Rigid" or "Flexible" based on `foundation_type`
+                if (data.foundation_type) {
+                    // Reset semua radio button sebelum memilih salah satu
+                    $("input[name='rigid_or_flexible']").prop("checked", false).prop("disabled", false);
+
+                    setTimeout(function () {
+                        if (data.foundation_type === "Rigid") {
+                            $("#inlinerigid").prop("checked", true).prop("disabled", true).trigger("change");
+                            $("#inlineflexible").prop("disabled", true);
+                            setVibrationFields("rigid");
+                        } else if (data.foundation_type === "Flexible") {
+                            $("#inlineflexible").prop("checked", true).prop("disabled", true).trigger("change");
+                            $("#inlinerigid").prop("disabled", true);
+                            setVibrationFields("flexible");
+                        }
+                    }, 50);
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("AJAX Error:", status, error);
+            }
+        });
+
+        function setInputFields(classType) {
+            if (classType === "class2") {
+                $("#inputvib_class_2_de, #inputvib_class_2_nde").prop("disabled", false);
+                $("#inputvib_class_3_de, #inputvib_class_3_nde").prop("disabled", true).val("");
+            } else if (classType === "class3") {
+                $("#inputvib_class_3_de, #inputvib_class_3_nde").prop("disabled", false);
+                $("#inputvib_class_2_de, #inputvib_class_2_nde").prop("disabled", true).val("");
+            }
+        }
+
+        function setVibrationFields(type) {
+            if (type === "rigid") {
+                $("#inputrigitde, #inputrigitnde").prop("disabled", false);
+                $("#inputflexiblede, #inputflexiblende").prop("disabled", true).val("");
+            } else if (type === "flexible") {
+                $("#inputflexiblede, #inputflexiblende").prop("disabled", false);
+                $("#inputrigitde, #inputrigitnde").prop("disabled", true).val("");
+            }
+        }
+    });
+
+</script>
+

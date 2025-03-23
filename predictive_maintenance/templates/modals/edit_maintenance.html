@@ -1,0 +1,245 @@
+{% load static %}
+
+{% comment %} Modal tambah data maintenance {% endcomment %}
+<div class="modal fade" id="editmaintenance{{m.id}}" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Data Maintenance</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            
+            <!-- FORM -->
+            <form action="{% url 'edit_data_maintenance' m.id %}" method="POST">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 d-flex justify-content-between align-items-center">
+                            <h5>Preventive Maintenance</h5>
+                            <div class="d-flex flex-column text-right">
+                                <h6 class="mb-0">Dibuat: {{m.created_at|date:"d F Y - H:i:s"}}</h6>
+                                <h6 class="mb-0">Diperbarui: {{m.updated_at|date:"d F Y - H:i:s"}}</h6>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="card border border-dark mb-3">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputload_current_r">Motor <b class="text-danger">*</b></label>
+                                                <select name="motor" class="form-control select2" required disabled>
+                                                    <option value="" selected>{{m.motor.tag_number}} - {{m.motor.name}} </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputperiodik">Periodik <b class="text-danger">*</b></label>
+                                                <select name="periodik" id="inputperiodik" class="form-control" required disabled>
+                                                    <option value="" selected>{{m.periodik}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputpelaksana">Pelaksana <b class="text-danger">*</b></label>
+                                                <input type="text" name="pelaksana" class="form-control" id="inputpelaksana" value="{{m.pelaksana}}" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        {% if m.measurement %}
+                        <div class="col-sm-6">
+                            <h5>Load Current (IB)</h5>
+                            <div class="card border border-dark mb-3">
+                                <div class="card-body">
+                                    <div class="row">
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="inputload_current_r">Load Current R </label>
+                                                    <input type="number" step="any" name="load_current_r" class="form-control" id="inputload_current_r" placeholder="Ampere(A)" value="{{m.measurement.load_current_r}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="inputload_current_s">Load Current S </label>
+                                                    <input type="number" step="any" name="load_current_s" class="form-control" id="inputload_current_s" placeholder="Ampere(A)" value="{{m.measurement.load_current_s}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <div class="form-group">
+                                                    <label for="inputload_current_t">Load Current T </label>
+                                                    <input type="number" step="any" name="load_current_t" class="form-control" id="inputload_current_t" placeholder="Ampere(A)" value="{{m.measurement.load_current_t}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <h5>Bearing & Coil Temp (Max 80°)</h5>
+                            <div class="card border border-dark mb-3">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputbearing_temp_de">Bearing D.E </label>
+                                                <input type="number" step="any" name="bearing_temp_de" class="form-control" id="inputbearing_temp_de" placeholder="Max 80°" value="{{m.measurement.bearing_temp_de}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputbearing_temp_nde">Bearing N.D.E </label>
+                                                <input type="number" step="any" name="bearing_temp_nde" class="form-control" id="inputbearing_temp_nde" placeholder="Max 80°" value="{{m.measurement.bearing_temp_nde}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form-group">
+                                                <label for="inputcoil_temp">Load Current T </label>
+                                                <input type="number" step="any" name="coil_temp" class="form-control" id="inputcoil_temp" placeholder="Max 80°" value="{{m.measurement.coil_temp}}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        {% if m.vibration %}
+                        <div class="col-sm-6">
+                            <h5>Vibration Motor</h5>
+                            <div class="card border border-dark mb-3">
+                                <div class="card-body">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="foundation_type" id="inlineeditrigid" value="Rigid"
+                                            {% if m.motor.foundation_type == "Rigid" %} checked {% else %} disabled {% endif %}>
+                                        <label class="form-check-label" for="inlineeditrigid">RIGID</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="foundation_type" id="inlineeditflexible" value="Flexible"
+                                            {% if m.motor.foundation_type == "Flexible" %} checked {% else %} disabled {% endif %}>
+                                        <label class="form-check-label" for="inlineeditflexible">FLEXIBLE</label>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputeditrigitde">Rigid D.E </label>
+                                                <input type="number" step="any" name="vib_rigid_de" class="form-control" id="inputeditrigitde"
+                                                    placeholder="Ampere(A)" value="{{ m.vibration.vib_rigid_de }}"
+                                                    {% if m.motor.foundation_type == "Flexible" %} readonly {% endif %}>
+                                                <small class="text-info">Max 4.5 mm/s</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputeditrigitnde">Rigid N.D.E </label>
+                                                <input type="number" step="any" name="vib_rigid_nde" class="form-control" id="inputeditrigitnde"
+                                                    placeholder="Ampere(A)" value="{{ m.vibration.vib_rigid_nde }}"
+                                                    {% if m.motor.foundation_type == "Flexible" %} readonly {% endif %}>
+                                                <small class="text-info">Max 4.5 mm/s</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputeditflexiblede">Flexible D.E </label>
+                                                <input type="number" step="any" name="vib_flexible_de" class="form-control" id="inputeditflexiblede"
+                                                    placeholder="Ampere(A)" value="{{ m.vibration.vib_flexible_de }}"
+                                                    {% if m.motor.foundation_type == "Rigid" %} readonly {% endif %}>
+                                                <small class="text-info">Max 7.1 mm/s</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputeditflexiblende">Flexible N.D.E </label>
+                                                <input type="number" step="any" name="vib_flexible_nde" class="form-control" id="inputeditflexiblende"
+                                                    placeholder="Ampere(A)" value="{{ m.vibration.vib_flexible_nde }}"
+                                                    {% if m.motor.foundation_type == "Rigid" %} readonly {% endif %}>
+                                                <small class="text-info">Max 7.1 mm/s</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <h5>Vibrasion Bearing</h5>
+                            <div class="card border border-dark mb-3">
+                                <div class="card-body">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="class_type" id="inlineeditclass2" value="Class 2" {% if m.motor.class_type == "Class 2" %} checked {% else %} disabled {% endif %}>
+                                        <label class="form-check-label" for="inlineeditclass2">Class 2</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="class_type" id="inlineeditclass3" value="Class 3" {% if m.motor.class_type == "Class 3" %} checked {% else %} disabled {% endif %}>
+                                        <label class="form-check-label" for="inlineeditclass3">Class 3</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputeditvib_class_2_de">Class 2 D.E </label>
+                                                <input type="number" step="any" name="vib_class_2_de" class="form-control" id="inputeditvib_class_2_de" placeholder="Max 80°" value="{{m.vibration.vib_class_2_de}}" {% if m.motor.class_type == "Class 3" %} readonly {% endif %}>
+                                                <small class="text-info">Max 4gE</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputeditvib_class_2_nde">Class 2 N.D.E </label>
+                                                <input type="number" step="any" name="vib_class_2_nde" class="form-control" id="inputeditvib_class_2_nde" placeholder="Max 80°" value="{{m.vibration.vib_class_2_nde}}" {% if m.motor.class_type == "Class 3" %} readonly {% endif %}>
+                                                <small class="text-info">Max 4gE</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputeditvib_class_3_de">Class 3 D.E </label>
+                                                <input type="number" step="any" name="vib_class_3_de" class="form-control" id="inputeditvib_class_3_de" placeholder="Max 80°" value="{{m.vibration.vib_class_3_de}}" {% if m.motor.class_type == "Class 2" %} readonly {% endif %}>
+                                                <small class="text-info">Max 10gE</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label for="inputeditvib_class_3_nde">Class 3 N.D.E </label>
+                                                <input type="number" step="any" name="vib_class_3_nde" class="form-control" id="inputeditvib_class_3_nde" placeholder="Max 80°" value="{{m.vibration.vib_class_3_nde}}" {% if m.motor.class_type == "Class 2" %} readonly {% endif %}>
+                                                <small class="text-info">Max 10gE</small>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="inputketerangan">Keterangan </label>
+                                <small class="text-info">Tinggalkan catatan untuk hasil pengeditan data disini, jika diperlukan.</small>
+                                <textarea class="form-control" name="keterangan" id="inputketerangan" rows="3">{{m.keterangan}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning">Save Changes</button>
+                </div>
+            </form>
+            <!-- /FORM -->
+        </div>
+    </div>
+</div>

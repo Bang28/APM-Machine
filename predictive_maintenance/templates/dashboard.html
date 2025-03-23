@@ -1,0 +1,274 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMP | Dashboard</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css'>
+    <!-- DataTables -->
+    <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="{% static 'plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css' %}">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+</head>
+<body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        {% include 'snippets/navbar.html' %}
+
+        <!-- Main Sidebar Container -->
+        {% include 'snippets/sidebar.html' %}
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Dashboard</h1>
+                </div><!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <!-- Small boxes (Stat box) -->
+                    <div class="row">
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-info">
+                            <div class="inner">
+                                <h3>{{motors.count}}</h3>
+
+                                <p>Data Motor</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <a href="{% url 'data_motor' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{maintenances.count}}</h3>
+
+                                <p>Maintenance</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <a href="{% url 'data_maintenance' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-danger">
+                            <div class="inner">
+                                <h3>{{trends.count}}</h3>
+
+                                <p>Trend Motor</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <a href="{% url 'data_results' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- col -->
+                        <div class="col-lg-3 col-6">
+                            <!-- small box -->
+                            <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>{{users.count}}</h3>
+
+                                <p>User Registrations</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <a href="{% url 'list_pengguna' %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            </div>
+                        </div>
+                        <!-- col -->
+                    </div>
+                    <!-- /.row -->
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Trends Motor</h3>    
+                                </div>
+                            <div class="card-body">
+                                <table id="tbtrendmotor" class="table table-sm table-bordered table-striped text-center">
+                                    <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kode Motor</th>
+                                        <th>Nama</th>
+                                        <th>Jumlah</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for m in trends %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{m.tag_number}}</td>
+                                            <td>{{m.name}}</td>
+                                            <td>{{m.total_trend}} x</td>
+                                            <td>
+                                                <a href="{% url 'motor_trend' m.id %}" class="btn btn-outline-info btn-sm"> Lihat Trends </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Aktifitas Terkini</h3>    
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body p-0">
+                                    <ul class="products-list product-list-in-card pl-2 pr-2">
+                                    {% for l in logs %}
+                                    <li class="item">
+                                        <div class="product-img">
+                                        <img src="{% static 'dist/img/user.jpg' %}" alt="Product Image" class="img-fluid img-circle">
+                                        </div>
+                                        <div class="product-info">
+                                        <a class="product-title">{{l.user}}
+                                            <span class="badge 
+                                            {% if l.action == "Add" %}
+                                            badge-success
+                                            {% elif l.action == "Change" %}
+                                            badge-warning
+                                            {% else %}
+                                            badge-danger
+                                            {% endif %}
+                                            float-right">{{l.timestamp|date:'d/m/Y H:i'}}</span></a>
+                                        <span class="product-description">
+                                            {{l.description}}
+                                        </span>
+                                        </div>
+                                    </li>
+                                    {% empty %}
+                                    <p class="text-center">Tidak ada aktivitas.</p>
+                                    {% endfor %}
+                                    <!-- Pagination -->
+                                    {% if logs.has_other_pages %}
+                                    <nav>
+                                        <ul class="pagination justify-content-center">
+                                            {% if logs.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ logs.previous_page_number }}" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">&laquo;</span>
+                                            </li>
+                                            {% endif %}
+
+                                            {% for num in logs.paginator.page_range %}
+                                            <li class="page-item {% if logs.number == num %}active{% endif %}">
+                                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                            </li>
+                                            {% endfor %}
+
+                                            {% if logs.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ logs.next_page_number }}" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">&raquo;</span>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+                                    {% endif %}
+                                    <!-- /.Pagination -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <!-- /.card -->
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+        
+    </div>
+
+    {% comment %} jQuery {% endcomment %}
+    <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
+    {% comment %} Bootstrap {% endcomment %}
+    <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    {% comment %} DataTables  & Plugins {% endcomment %}
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+    {% comment %} SweetAlert2 {% endcomment %}
+    <script src="{% static 'plugins/sweetalert2/sweetalert2.min.js' %}"></script>
+    <!-- Toastr -->
+    <script src="{% static 'plugins/toastr/toastr.min.js' %}"></script>
+    {% comment %} AdminLTE {% endcomment %}
+    <script src="{% static 'dist/js/adminlte.js' %}"></script>
+    
+</body>
+</html>
+
+<!-- Alerts -->
+{% include 'alert/alerts.html' %}
+
+{% comment %} Datatables {% endcomment %}
+<script>
+    $(function () {        
+        $('#tbtrendmotor').DataTable({
+        "paging": true,
+        "lengthChange": true,
+        "searching": true,
+        "ordering": false,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        });
+    });
+</script>

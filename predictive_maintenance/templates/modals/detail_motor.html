@@ -1,0 +1,106 @@
+{% comment %} Modal detail data motor {% endcomment %}
+<div class="modal fade" id="detaildatamotor{{m.id}}">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h4 class="modal-title">Detail Data Motor</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+            <form action="">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputtagno">Tag No</label>
+                            <input type="text" class="form-control" id="inputtagno" placeholder="Tag no" value="{{m.tag_number}}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="form-group">
+                            <label for="inputmotorname">Motor Name</label>
+                            <input type="text" class="form-control" id="inputmotorname" placeholder="Motor name" value="{{m.name}}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <h5>Specification</h5>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputoutput">Output (KW)</label>
+                            <input type="text" class="form-control" id="inputoutput" placeholder="Output (KW)" value="{{m.output}}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputvolt">Volt (A)</label>
+                            <input type="text" class="form-control" id="inputvolt" placeholder="Volt (A)" value="{{m.voltage}}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputspeed">Speed (RPM)</label>
+                            <input type="text" class="form-control" id="inputspeed" placeholder="Speed (RPM)" value="{{m.speed}}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <h5>Current</h5>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="inputtype">Type</label>
+                            <input type="text" class="form-control" id="inputtype" placeholder="Type" value="{{m.starter_type}}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="inputsetol">Set/Ol</label>
+                            <input type="text" class="form-control" id="inputsetol" placeholder="Set/Ol" value="{{m.set_ol}}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="inputinput">Input (A)</label>
+                            <input type="text" class="form-control" id="inputinput" placeholder="Input (A)" value="{{m.input}}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label for="inputfrekuensi">Frek (Hz)</label>
+                            <input type="text" name="frek" class="form-control" id="inputfrekuensi" placeholder="Frekuensi (Hz)" value="{{m.frek}}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputframe">Frame</label>
+                            <input type="text" name="frame" class="form-control" id="inputframe" placeholder="Frame" value="{{m.frame}}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="foundation_type">Class Type</label>
+                            <input type="text" name="foundation_type" class="form-control" id="foundation_type" placeholder="foundation type" value="{{m.foundation_type}}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="inputclasstype">Class Type</label>
+                            <input type="text" name="class_type" class="form-control" id="inputclass_type" placeholder="class type" value="{{m.class_type}}" readonly>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editdatamotor{{m.id}}" >Edit</button>
+        </div>
+    </div>
+    <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
