@@ -172,7 +172,7 @@
         //console.log("Motor ID Selected:", motor_id); // Debugging
 
         $.ajax({
-            url: "/get-motor/" + motor_id + "/",
+            url: "/apm-machine/get-motor/" + motor_id + "/",
             type: "GET",
             beforeSend: function () {
                 //console.log("Sending AJAX request to:", "/get-motor/" + motor_id + "/");
