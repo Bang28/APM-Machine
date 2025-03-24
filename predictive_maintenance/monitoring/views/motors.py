@@ -2,6 +2,52 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from monitoring.models import  Motor, LogActivity
+import openpyxl
+from openpyxl.styles import Font, PatternFill, Alignment
+from django.http import HttpResponse
+
+
+@login_required(login_url='login')
+def export_motor_excel(request):
+    # Ambil semua tipe starter unik dari database
+    starter_types = Motor.objects.values_list('starter_type', flat=True).distinct()
+    
+    # Buat workbook baru dan hapus sheet default
+    wb = openpyxl.Workbook()
+    wb.remove(wb.active)
+    
+    for starter in starter_types:
+        # Buat sheet baru berdasarkan starter_type
+        sheet_name = starter if starter else "Unknown"
+        ws = wb.create_sheet(title=sheet_name[:31])  # Nama sheet maksimal 31 karakter
+        
+        # Header
+        headers = ["NO", "TAG NO", "MOTOR NAME", "OUTPUT (KW)", "VOLTAGE (V)", "STARTER TYPE", "SET OL",
+                   "INPUT (A)", "SPEED (RPM)", "FREK (HZ)", "FRAME", "FOUNDATION TYPE", "CLASS TYPE"]
+        ws.append(headers)
+        
+        # Styling header
+        for col in range(1, len(headers) + 1):
+            ws.cell(row=1, column=col).font = Font(bold=True, color="FFFFFF")
+            ws.cell(row=1, column=col).fill = PatternFill(start_color="4F81BD", end_color="4F81BD", fill_type="solid")
+            ws.cell(row=1, column=col).alignment = Alignment(horizontal="center", vertical="center")
+        
+        # Ambil data motor berdasarkan starter_type
+        motors = Motor.objects.filter(starter_type=starter)
+        
+        # Tambahkan data ke sheet
+        for index, motor in enumerate(motors, start=1):
+            ws.append([
+                index, motor.tag_number, motor.name, motor.output, motor.voltage, motor.starter_type,
+                motor.set_ol, motor.input, motor.speed, motor.frek, motor.frame, motor.foundation_type,
+                motor.class_type
+            ])
+    
+    # Buat response HTTP dengan file Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="data_motors.xlsx"'
+    wb.save(response)
+    return response
 
 @login_required(login_url='login')
 def data_motor(request):
