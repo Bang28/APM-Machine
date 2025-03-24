@@ -3,7 +3,7 @@ from django.urls import path
 from monitoring.views.dashboards import dashboard
 from monitoring.views.users import list_pengguna, add_pengguna, edit_pengguna, del_pengguna, profile, edit_profile, loginApp, logoutApp
 from monitoring.views.motors import data_motor, add_data_motor, edit_data_motor, del_data_motor
-from monitoring.views.maintenances import data_maintenance, get_motor_details, add_data_maintenance, edit_data_maintenance, del_data_maintenance
+from monitoring.views.maintenances import data_maintenance, get_motor_details, add_data_maintenance, edit_data_maintenance, del_data_maintenance, export_maintenance_excel
 from monitoring.views.results import data_results, del_all_data_maintenance, motor_trend
 
 urlpatterns = [
@@ -18,6 +18,7 @@ urlpatterns = [
     path('edit_data_maintenance/<int:maintenance_id>/', edit_data_maintenance, name='edit_data_maintenance'),
     path('del_data_maintenance/<int:maintenance_id>/', del_data_maintenance, name='del_data_maintenance'),
     path('get-motor/<int:motor_id>/', get_motor_details, name='get_motor_details'),
+    path("export-main-excel/", export_maintenance_excel, name="export-main-excel"),
 
     path("data_results/", data_results, name="data_results"),
     path("del_all_data_maintenance/<int:motor_id>/", del_all_data_maintenance, name="del_all_data_maintenance"),

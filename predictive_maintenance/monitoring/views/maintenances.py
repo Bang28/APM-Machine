@@ -4,7 +4,96 @@ from django.http import JsonResponse
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from monitoring.models import  Motor, Measurement, Vibration, Maintenance, LogActivity
+import openpyxl
+from openpyxl.styles import Font, Alignment, PatternFill
+from django.http import HttpResponse
+from collections import defaultdict
 
+@login_required(login_url='login')
+def export_maintenance_excel(request):
+    # Ambil parameter filter dari URL
+    tag_no = request.GET.get("tag_no", "").strip()  # Ambil kode motor dari URL
+
+    # Filter data berdasarkan kode motor (jika diberikan)
+    if tag_no:
+        maintenances = Maintenance.objects.filter(motor__tag_number__icontains=tag_no)
+    else:
+        maintenances = Maintenance.objects.all()
+
+    # Jika tidak ada data, kembalikan response kosong
+    if not maintenances.exists():
+        return HttpResponse("Tidak ada data yang ditemukan untuk filter yang diberikan.", status=404)
+
+    # **1. Mengelompokkan data berdasarkan bulan**
+    monthly_data = defaultdict(list)
+    for maintenance in maintenances:
+        month_key = maintenance.tanggal_maintenance.strftime('%m-%Y')  # Format "03-2025"
+        monthly_data[month_key].append(maintenance)
+
+    # Buat workbook baru
+    wb = openpyxl.Workbook()
+    wb.remove(wb.active)  # Hapus sheet default
+
+    # Loop untuk setiap bulan
+    for month_key, maintenances_in_month in monthly_data.items():
+        sheet_name = month_key  # Misal: "03-2025"
+        ws = wb.create_sheet(title=sheet_name)
+
+        # Header kolom
+        headers = [
+            "NO", "TAG NO", "MOTOR NAME", "OUT PUT (KW)", "VOLT (V)", "TYPE", "SET OL", "Speed (RPM)",
+            "FREK (HZ)", "LOAD CURRENT (IB) R (A)", "LOAD CURRENT (IB) S (A)", "LOAD CURRENT (IB) T (A)",
+            "BEARING TEMP D.E (Max 80°C)", "BEARING TEMP N.D.E (Max 80°C)", "COIL TEMP (Max 80°C)",
+            "VIBRASI MOTOR (FOUNDATION) RIGID D.E (Max 4,5 mm/s)", "VIBRASI MOTOR (FOUNDATION) RIGID N.D.E (Max 4,5 mm/s)",
+            "VIBRASI MOTOR (FOUNDATION) FLEXIBLE D.E (Max 7,1 mm/s)", "VIBRASI MOTOR (FOUNDATION) FLEXIBLE N.D.E (Max 7,1 mm/s)",
+            "VIBRASI BEARING CLASS 2 D.E (Max 4 gE)", "VIBRASI BEARING CLASS 2 N.D.E (Max 10 gE)",
+            "VIBRASI BEARING CLASS 3 D.E (Max 4 gE)", "VIBRASI BEARING CLASS 3 N.D.E (Max 10 gE)",
+            "KETERANGAN", "TANGGAL MAINTENANCE"
+        ]
+
+        # Tambahkan header ke sheet
+        ws.append(headers)
+
+        # Styling header
+        for col in range(1, len(headers) + 1):
+            ws.cell(row=1, column=col).font = Font(bold=True, color="FFFFFF")
+            ws.cell(row=1, column=col).fill = PatternFill(start_color="4F81BD", end_color="4F81BD", fill_type="solid")
+            ws.cell(row=1, column=col).alignment = Alignment(horizontal="center", vertical="center")
+
+        # Loop untuk setiap data maintenance dalam bulan yang sama
+        for index, maintenance in enumerate(maintenances_in_month, start=1):
+            motor = maintenance.motor
+            measurement = Measurement.objects.filter(maintenance=maintenance).first()
+            vibration = Vibration.objects.filter(maintenance=maintenance).first()
+
+            # **2. Format tanggal menjadi DD/MM/YYYY**
+            formatted_date = maintenance.tanggal_maintenance.strftime('%d/%m/%Y')
+
+            ws.append([
+                index, motor.tag_number, motor.name, motor.output, motor.voltage, motor.starter_type, motor.set_ol,
+                motor.speed, motor.frek,
+                measurement.load_current_r if measurement else "", measurement.load_current_s if measurement else "",
+                measurement.load_current_t if measurement else "",
+                measurement.bearing_temp_de if measurement else "", measurement.bearing_temp_nde if measurement else "",
+                measurement.coil_temp if measurement else "",
+                vibration.vib_rigid_de if vibration else "", vibration.vib_rigid_nde if vibration else "",
+                vibration.vib_flexible_de if vibration else "", vibration.vib_flexible_nde if vibration else "",
+                vibration.vib_class_2_de if vibration else "", vibration.vib_class_2_nde if vibration else "",
+                vibration.vib_class_3_de if vibration else "", vibration.vib_class_3_nde if vibration else "",
+                maintenance.keterangan, formatted_date  # **Tambahkan kolom Tanggal Maintenance**
+            ])
+
+    # Buat nama file ekspor berdasarkan filter
+    filename = "all-data-maintenance-motor.xlsx"
+    if tag_no:
+        filename = f"data-maintenance-motor-{tag_no.replace(' ', '_')}.xlsx"
+
+    # Simpan workbook ke response HTTP
+    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    wb.save(response)
+
+    return response
 
 @login_required(login_url='login')
 def data_maintenance(request):

@@ -61,43 +61,79 @@
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#tambahdatamaintenance">
                                 Tambah Data Maintenance
                                 </button>
+                                <!-- Tambahkan tombol Export ke Excel -->
+                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exportModal">
+                                    Export to Excel
+                                </button>
                             </div>
-                        <div class="card-body">
-                            <table id="maintenance" class="table table-bordered table-striped text-center">
-                            <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Kode Motor</th>
-                                <th>Periodik</th>
-                                <th>Tanggal Maintenance</th>
-                                <th>Keterangan</th>
-                                <th>Pelaksana</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {% for m in maintenances %}
+
+                            <!-- Modal Filter -->
+                            <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exportModalLabel">Filter Data untuk Ekspor</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="exportForm" method="GET" action="{% url 'export-main-excel' %}">
+                                                <div class="form-group">
+                                                    <label for="tag_no">Kode Motor / Tag No</label>
+                                                    <select class="form-control" id="tag_no" name="tag_no">
+                                                        <option value="">Semua Motor</option>
+                                                        {% for motor in motors %}
+                                                            <option value="{{ motor.tag_number }}">{{ motor.tag_number }} - {{ motor.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-primary">Export</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-body">
+                                <table id="maintenance" class="table table-bordered table-striped text-center">
+                                <thead>
                                 <tr>
-                                    <td>{{forloop.counter}}</td>
-                                    <td>{{m.motor.tag_number}}</td>
-                                    <td>{{m.periodik}}</td>
-                                    <td>{{m.tanggal_maintenance|date:'d F Y'}}</td>
-                                    <td>{{m.keterangan}}</td>
-                                    <td>{{m.pelaksana}}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#detailmaintenance{{m.id}}"> Detail </button>
-                                        <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#editmaintenance{{m.id}}" >Edit</button>
-                                        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#hapusmaintenance{{m.id}}">Delete</button>
-                                    </td>
+                                    <th>No</th>
+                                    <th>Kode Motor</th>
+                                    <th>Periodik</th>
+                                    <th>Tanggal Maintenance</th>
+                                    <th>Keterangan</th>
+                                    <th>Pelaksana</th>
+                                    <th>Action</th>
                                 </tr>
-                                {% include 'modals/detail_maintenance.html' %}
-                                {% include 'modals/edit_maintenance.html' %}
-                                {% include 'modals/hapus_maintenance.html' %}
-                                {% endfor %}
-                            </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
+                                </thead>
+                                <tbody>
+                                    {% for m in maintenances %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{m.motor.tag_number}}</td>
+                                        <td>{{m.periodik}}</td>
+                                        <td>{{m.tanggal_maintenance|date:'d F Y'}}</td>
+                                        <td>{{m.keterangan}}</td>
+                                        <td>{{m.pelaksana}}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#detailmaintenance{{m.id}}"> Detail </button>
+                                            <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#editmaintenance{{m.id}}" >Edit</button>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#hapusmaintenance{{m.id}}">Delete</button>
+                                        </td>
+                                    </tr>
+                                    {% include 'modals/detail_maintenance.html' %}
+                                    {% include 'modals/edit_maintenance.html' %}
+                                    {% include 'modals/hapus_maintenance.html' %}
+                                    {% endfor %}
+                                </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
                     </div>
@@ -161,7 +197,12 @@
         $('#motor').select2({
             width: '100%',
             dropdownParent: $('#tambahdatamaintenance')
-        })
+        });
+
+        $('#tag_no').select2({
+            width: '100%',
+            dropdownParent: $('#exportModal')
+        });
     })
 </script>
 
