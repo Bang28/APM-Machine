@@ -157,6 +157,7 @@ def add_data_maintenance(request):
             vc3_nde = get_float(request.POST.get('vib_class_3_nde'))
 
             periodik = request.POST.get('periodik', '').strip()
+            tgl_main = request.POST.get('tanggal_maintenance')
             keterangan = request.POST.get('keterangan', '').strip()
             pelaksana = request.POST.get('pelaksana', '').strip()
 
@@ -165,6 +166,7 @@ def add_data_maintenance(request):
                 maintenance = Maintenance.objects.create(
                     motor=motor,
                     periodik=periodik,
+                    tanggal_maintenance = tgl_main,
                     keterangan=keterangan,
                     pelaksana=pelaksana
                 )

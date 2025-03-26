@@ -30,7 +30,7 @@ class Motor(models.Model):
 class Maintenance(models.Model):
     motor = models.ForeignKey("Motor", on_delete=models.CASCADE, verbose_name="Motor yang Dimaintenance")
     periodik = models.CharField(max_length=100, verbose_name="Periodik Maintenance") 
-    tanggal_maintenance = models.DateField(verbose_name="Tanggal Maintenance", auto_now_add=True)
+    tanggal_maintenance = models.DateField(verbose_name="Tanggal Maintenance", blank=True, null=True)
     keterangan = models.TextField(verbose_name="Keterangan", blank=True, null=True)
     pelaksana = models.CharField(max_length=100, verbose_name="Pelaksana", blank=True, null=True)
     
