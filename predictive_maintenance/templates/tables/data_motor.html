@@ -60,45 +60,49 @@
                                 Tambah Data Motor
                                 </button>
                                 <a href="{% url "export-motor-excel" %}" class="btn btn-success">
-                                Export to Excel
+                                Ekspor ke Excel
                                 </a>
+                                <button type="button" class="btn btn-info" data-toggle="modal" data-target="#importMotorModal">
+                                    Import Data Motor
+                                </button>
                             </div>
-                        <div class="card-body">
-                            <table id="datamotor" class="table table-bordered table-striped text-center">
-                            <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Kode Motor</th>
-                                <th>Nama</th>
-                                <th>Tipe</th>
-                                <th>Speed(RPM)</th>
-                                <th>Tipe Kelas</th>
-                                <th>Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {% for m in motors %}
+                            {% include 'modals/import_motor.html' %}
+                            <div class="card-body">
+                                <table id="datamotor" class="table table-bordered table-striped text-center">
+                                <thead>
                                 <tr>
-                                    <td>{{forloop.counter}}</td>
-                                    <td>{{m.tag_number}}</td>
-                                    <td>{{m.name}}</td>
-                                    <td>{{m.starter_type}}</td>
-                                    <td>{{m.speed}}</td>
-                                    <td>{{m.class_type}}</td>
-                                    <td>
-                                        <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#detaildatamotor{{m.id}}"> Detail </button>
-                                        <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#editdatamotor{{m.id}}" >Edit</button>
-                                        <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#hapusdatamotor{{m.id}}">Delete</button>
-                                    </td>
+                                    <th>No</th>
+                                    <th>Kode Motor</th>
+                                    <th>Nama</th>
+                                    <th>Tipe</th>
+                                    <th>Speed(RPM)</th>
+                                    <th>Tipe Kelas</th>
+                                    <th>Action</th>
                                 </tr>
-                                {% include 'modals/detail_motor.html' %}
-                                {% include 'modals/edit_motor.html' %}
-                                {% include 'modals/hapus_motor.html' %}
-                                {% endfor %}
-                            </tbody>
-                            </table>
-                        </div>
-                        <!-- /.card-body -->
+                                </thead>
+                                <tbody>
+                                    {% for m in motors %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{m.tag_number}}</td>
+                                        <td>{{m.name}}</td>
+                                        <td>{{m.starter_type}}</td>
+                                        <td>{{m.speed}}</td>
+                                        <td>{{m.class_type}}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#detaildatamotor{{m.id}}"> Detail </button>
+                                            <button type="button" class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#editdatamotor{{m.id}}" >Edit</button>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#hapusdatamotor{{m.id}}">Delete</button>
+                                        </td>
+                                    </tr>
+                                    {% include 'modals/detail_motor.html' %}
+                                    {% include 'modals/edit_motor.html' %}
+                                    {% include 'modals/hapus_motor.html' %}
+                                    {% endfor %}
+                                </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
                         </div>
                         <!-- /.card -->
                     </div>

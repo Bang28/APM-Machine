@@ -143,6 +143,7 @@
                                                         <th class="bg-success" colspan="2">Vibrasi Bearing (Class 2)</th>
                                                         <th class="bg-success" colspan="2">Vibrasi Bearing (Class 3)</th>
                                                         <th class="bg-success" rowspan="4">Tanggal</th>
+                                                        <th class="bg-success" rowspan="4">Keterangan</th>
                                                     </tr>
                                                     <tr>
                                                         <th class="bg-success" colspan="3">(IB)</th>
@@ -200,6 +201,7 @@
                                                         <td>{{v.vib_class_3_de|default:"-"}}</td>
                                                         <td>{{v.vib_class_3_nde|default:"-"}}</td>
                                                         <td>{{main.tanggal_maintenance|default:"-"|date:'d/m/Y'}}</td>
+                                                        <td>{{main.keterangan|default:"-"}}</td>
                                                     </tr>
                                                     {% endfor %}
                                                 </tbody>

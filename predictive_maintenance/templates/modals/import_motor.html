@@ -1,0 +1,26 @@
+<!-- Modal Import Data Motor -->
+<div class="modal fade" id="importMotorModal" tabindex="-1" role="dialog" aria-labelledby="importMotorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="importMotorModalLabel">Import Data Motor dari Excel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="importMotorForm" method="post" enctype="multipart/form-data" action="{% url 'import_motor' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>Silakan unggah file Excel yang berisi data motor.</p>
+                    <input type="file" name="file" class="form-control mb-3" required>
+
+                    <a href="{% url 'download_sample_motor' %}" class="btn btn-info">Download Data Sampel</a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

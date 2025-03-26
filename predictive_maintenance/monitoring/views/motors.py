@@ -3,9 +3,93 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from monitoring.models import  Motor, LogActivity
 import openpyxl
+import pandas as pd
 from openpyxl.styles import Font, PatternFill, Alignment
 from django.http import HttpResponse
 
+@login_required(login_url='login')
+def download_sample_motor(request):
+    # Buat DataFrame dengan format contoh
+    sample_data = {
+        "Tag No": pd.Series(["72A-M-01"]),
+        "Motor Name": pd.Series(["CONVEYOR HYDRA PULPER"]),
+        "Output": pd.Series([7.5]),
+        "Voltage": pd.Series([380]),
+        "Starter Type": pd.Series(["DOL"]),
+        "SET OL": pd.Series([15]),
+        "Input": pd.Series([15]),
+        "Speed": pd.Series([960]),
+        "FREK (Boleh Kosong)": pd.Series([16.5, None], dtype="object"),  # Bisa berbeda panjang
+        "Frame (Boleh Kosong)": pd.Series(["F100", None], dtype="object"),  # Bisa berbeda panjang
+        "Fondation Type": pd.Series(["Rigid"]),
+        "Class Type": pd.Series(["Class 2"]),
+    }
+
+    # Konversi ke DataFrame tanpa ValueError
+    df = pd.DataFrame(dict(sample_data))
+
+    # Simpan ke Excel
+    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response["Content-Disposition"] = 'attachment; filename="sample_motor.xlsx"'
+
+    with pd.ExcelWriter(response, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False)
+
+    return response
+
+@login_required(login_url='login')
+def import_motor_data(request):
+    if request.method == "POST" and request.FILES.get("file"):
+        excel_file = request.FILES["file"]
+        try:
+            df = pd.read_excel(excel_file, dtype=str)  # Baca semua kolom sebagai string untuk pemrosesan
+            
+            # Konversi koma ke titik untuk kolom yang seharusnya angka
+            numeric_fields = ["Output", "Voltage", "SET OL", "Input", "Speed", "FREK"]
+            for field in numeric_fields:
+                if field in df.columns:
+                    df[field] = df[field].str.replace(",", ".", regex=True)  # Ubah koma ke titik
+                    df[field] = pd.to_numeric(df[field], errors="coerce")  # Konversi ke float
+
+            # Validasi: Pastikan hanya "FREK" dan "Frame" yang boleh kosong
+            required_fields = ["Tag No", "Motor Name", "Output", "Voltage", "Starter Type", "SET OL", "Input", "Speed", "Fondation Type", "Class Type"]
+            missing_values = df[required_fields].isnull().any(axis=1)  # Cek apakah ada kolom wajib yang kosong
+            
+            if missing_values.any():
+                messages.error(request, "Beberapa baris memiliki data yang tidak lengkap. Hanya 'FREK' dan 'Frame' yang boleh kosong.")
+                return redirect("data_motor")
+
+            # Simpan ke database
+            for _, row in df.iterrows():
+                Motor.objects.update_or_create(
+                    tag_number=row["Tag No"],
+                    defaults={
+                        "name": row["Motor Name"],
+                        "output": row["Output"],
+                        "voltage": row["Voltage"],
+                        "starter_type": row["Starter Type"],
+                        "set_ol": row["SET OL"],
+                        "input": row["Input"],
+                        "speed": row["Speed"],
+                        "frek": row["FREK"] if pd.notna(row["FREK"]) else None,  # Kosongkan jika NaN
+                        "frame": row["Frame"] if pd.notna(row["Frame"]) else None,  # Kosongkan jika NaN
+                        "foundation_type": row["Fondation Type"],
+                        "class_type": row["Class Type"],
+                    }
+                )
+
+            # Simpan log aktivitas
+            LogActivity.objects.create(
+                user=request.user,
+                action="Add",
+                description=f"Menambahkan data master motor dari file Excel."
+            )
+
+            messages.success(request, "Data berhasil diimport!")
+        except Exception as e:
+            messages.error(request, f"Terjadi kesalahan: {e}")
+
+    return redirect("data_motor")
 
 @login_required(login_url='login')
 def export_motor_excel(request):
