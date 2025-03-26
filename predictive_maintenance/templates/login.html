@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>APM | Login</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'dist/img/favicon.ico' %}">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -16,51 +17,80 @@
     <link rel="stylesheet" href="{% static 'plugins/toastr/toastr.min.css' %}">
     <!-- Theme style -->
     <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+
+    <style>
+        .login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+        }
+        .login-box {
+            width: 700px;
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .login-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8b500;
+            padding: 20px;
+        }
+        .login-image img {
+            max-width: 100%;
+            height: auto;
+        }
+        .login-form {
+            flex: 1;
+            padding: 40px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body class="hold-transition login-page">
+
     <div class="login-box">
-    <!-- /.login-logo -->
-    <div class="card card-outline card-primary">
-        <div class="card-header text-center">
-        <h1><b>APM</b> Machine</h1>
+        <div class="login-image">
+            <img src="{% static 'dist/img/image-login.png' %}" alt="3D Engineer">
         </div>
-        <div class="card-body">
-        <p class="login-box-msg">Sign in to start your session</p>
-            <form action="{% url "login" %}" method="POST">
+        <div class="login-form">
+            <h2 class="mb-4">Sign in to start your session</h2>
+            <form action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
                 <div class="input-group mb-3">
-                    <input type="text" name="username" class="form-control" placeholder="username">
+                    <input type="text" class="form-control" name="username" placeholder="Your Name" required>
                     <div class="input-group-append">
-                        <div class="input-group-text">
-                        <span class="fas fa-user"></span>
-                        </div>
+                        <div class="input-group-text"><i class="fas fa-user"></i></div>
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+                    <input type="password" id="password" class="form-control" name="password" placeholder="Password" required>
                     <div class="input-group-append" onclick="togglePassword()">
                         <div class="input-group-text">
-                        <span id="toggleIcon" class="fas fa-eye-slash"></span>
+                            <span id="toggleIcon" class="fas fa-eye-slash"></span>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-                <div class="col-8">
-                </div>
-                <!-- /.col -->
-                <div class="col-4">
-                    <button type="submit" class="btn btn-primary btn-block">Sign In</button>
-                </div>
-                <!-- /.col -->
+                    <div class="col-8">
+                    </div>
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-warning btn-block">Log in</button>
+                    </div>
                 </div>
             </form>
         </div>
-        <!-- /.card-body -->
     </div>
-    <!-- /.card -->
-    </div>
-    <!-- /.login-box -->
-
+    
     <!-- jQuery -->
     <script src="{% static 'plugins/jquery/jquery.min.js' %}"></script>
     <!-- Bootstrap 4 -->
@@ -73,6 +103,7 @@
     <script src="{% static 'dist/js/adminlte.min.js' %}"></script>
 </body>
 </html>
+
 
 {% include 'alert/alerts.html' %}
 
