@@ -71,8 +71,8 @@ def import_motor_data(request):
                         "set_ol": row["SET OL"],
                         "input": row["Input"],
                         "speed": row["Speed"],
-                        "frek": row["FREK"] if pd.notna(row["FREK"]) else None,  # Kosongkan jika NaN
-                        "frame": row["Frame"] if pd.notna(row["Frame"]) else None,  # Kosongkan jika NaN
+                        "frek": row["FREK (Boleh Kosong)"] if pd.notna(row["FREK (Boleh Kosong)"]) else None,  # Kosongkan jika NaN
+                        "frame": row["Frame (Boleh Kosong)"] if pd.notna(row["Frame (Boleh Kosong)"]) else None,  # Kosongkan jika NaN
                         "foundation_type": row["Fondation Type"],
                         "class_type": row["Class Type"],
                     }

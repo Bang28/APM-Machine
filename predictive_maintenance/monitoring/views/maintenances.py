@@ -111,8 +111,11 @@ def data_maintenance(request):
 def get_motor_details(request, motor_id):
     """Fungsi mengambil detail motor untuk dinamis form di tambah data maintenance"""
     motor = Motor.objects.filter(id=motor_id).first()
+    # Normalisasi format string sebelum dikirim ke frontend
+    class_type = motor.class_type.capitalize() if motor.class_type else None
+    foundation_type = motor.foundation_type.capitalize() if motor.foundation_type else None
     if motor:
-        return JsonResponse({'class_type': motor.class_type, 'foundation_type': motor.foundation_type,})
+        return JsonResponse({'class_type': class_type, 'foundation_type': foundation_type,})
     return JsonResponse({'error': 'Motor not found'}, status=404)
 
 @login_required(login_url='login')
